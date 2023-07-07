@@ -4,7 +4,7 @@
 #include "GeneticAlgorithm.hpp"
 
 struct Solution {
-    std::vector<bool> genome;
+    std::vector<bool> itemSelection;
     double fitness;
 };
 
@@ -27,6 +27,23 @@ private:
     void crossover() override {}
 
     void mutation() override {}
+
+    double fitness(Solution& solution) {
+        int totalValue = 0;
+        int totalWeight = 0;
+
+        for (size_t i = 0; i < solution.itemSelection.size(); ++i) {
+            if (solution.itemSelection[i]) {
+                totalValue += values[i];
+                totalWeight += weights[i];
+            }
+        }
+
+        if (totalWeight <= knapsackCapacity) {
+            return totalValue;
+        } 
+        return 0;
+    }
 
     std::vector<int> values;
     std::vector<int> weights;
