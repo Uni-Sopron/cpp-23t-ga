@@ -18,8 +18,6 @@ public:
 
     virtual void mutation() = 0;
 
-    virtual void* getBestSolution() = 0;
-
     void execute() {
         initializePopulation();
         for(int i = 0; i < generations; i++) {
