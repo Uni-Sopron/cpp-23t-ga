@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <random>
+#include <algorithm>
 
 #include "GeneticAlgorithm.hpp"
 
@@ -18,6 +19,7 @@ public:
     }
 
     Solution getBestSolution() {
+        sort();
         return solutions[0];
     }
 
@@ -36,7 +38,11 @@ private:
 
     void mutation() override {}
 
-    void sort() {}
+    void sort() {
+        std::sort(solutions.begin(), solutions.end(), [](const Solution &a, const Solution &b) {
+            return a.fitness > b.fitness; 
+        });
+    }
 
     Solution generateSolution() {
         std::random_device rd;
