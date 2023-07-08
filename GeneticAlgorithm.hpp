@@ -3,8 +3,8 @@
 
 class GeneticAlgorithm {
 public:
-    GeneticAlgorithm(int populationSize, int generations)
-        : populationSize(populationSize), generations(generations) { }
+    GeneticAlgorithm(int populationSize, int generations, int elitSize, double mutationRate, double crossoverRate)
+        : populationSize(populationSize), generations(generations), elitSize(elitSize), mutationRate(mutationRate), crossoverRate(crossoverRate) { }
 
     virtual ~GeneticAlgorithm() { }
 
@@ -25,12 +25,19 @@ public:
             selection();
             crossover();
             mutation();
+            calculateFitness();
+            sort();
         }
     }
+
+    virtual void sort() = 0;
 
 protected:
     int populationSize;
     int generations;
+    int elitSize;
+    double mutationRate;
+    double crossoverRate;
 };
 
 #endif
