@@ -14,8 +14,8 @@ struct Solution {
 
 class SawmillSchedulingGA : public GeneticAlgorithm {
 public:
-    SawmillSchedulingGA(int populationSize, int generations)
-        : GeneticAlgorithm(populationSize, generations) {}
+    SawmillSchedulingGA(int populationSize, int generations, int elitSize, double mutationRate, double crossoverRate)
+        : GeneticAlgorithm(populationSize, generations, elitSize, mutationRate, crossoverRate) {}
 
     Solution getBestSolution() {}
 
@@ -29,11 +29,13 @@ private:
     void crossover() override {}
 
     void mutation() override {}
+
+    void sort() override {}
 };
 
 
 int main() {
-    SawmillSchedulingGA SawmillSchedulingGA(100, 200);
+    SawmillSchedulingGA SawmillSchedulingGA(100, 200, 70, 0.5, 0.5);
 
     std::cout <<"Hello Universe, I give a solution for the sawmill scheduling problem!";
     
