@@ -12,14 +12,15 @@ struct Solution {
 
 class KnapsackGA : public GeneticAlgorithm {
 public:
-    KnapsackGA(int populationSize, int generations, const std::vector<int>& values, const std::vector<int>& weights, int knapsackCapacity)
-        : GeneticAlgorithm(populationSize, generations), values(values), weights(weights), knapsackCapacity(knapsackCapacity) {
+    KnapsackGA(int populationSize, int generations, int elitSize, double mutationRate, double crossoverRate, const std::vector<int>& values, const std::vector<int>& weights, int knapsackCapacity)
+        : GeneticAlgorithm(populationSize, generations, elitSize, mutationRate, crossoverRate), values(values), weights(weights), knapsackCapacity(knapsackCapacity) {
         solutions.resize(populationSize);
+
+        // Ez majd az execute() metódusban lesz
         initializePopulation();
     }
 
     Solution getBestSolution() {
-        sort();
         return solutions[0];
     }
 
@@ -30,9 +31,16 @@ private:
         }
     }
 
-    void calculateFitness() override {}
+    void calculateFitness() override {
+        for (Solution& solution : solutions) {
+            solution.fitness = fitness(solution);
+        }
+    }
 
-    void selection() override {}
+    void selection() override {
+        sort();
+        solutions.resize(elitSize);
+    }
 
     void crossover() override {}
 
@@ -56,7 +64,6 @@ private:
             solution.itemSelection[i] = distr(gen);
         }
 
-        solution.fitness = fitness(solution);
         return solution;
     }
 
@@ -89,7 +96,7 @@ int main() {
     std::vector<int> weights {1, 3, 4, 5};
     int knapsackCapacity = 10;
 
-    KnapsackGA knapsackGA(100, 200, values, weights, knapsackCapacity);
+    KnapsackGA knapsackGA(100, 200, 70, 0.5, 0.5, values, weights, knapsackCapacity);
 
     std::cout <<"Hello Universe, I give a solution for the knapsack problem!";
 
