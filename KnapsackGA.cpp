@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <random>
 
 #include "GeneticAlgorithm.hpp"
 
@@ -13,12 +14,19 @@ public:
     KnapsackGA(int populationSize, int generations, const std::vector<int>& values, const std::vector<int>& weights, int knapsackCapacity)
         : GeneticAlgorithm(populationSize, generations), values(values), weights(weights), knapsackCapacity(knapsackCapacity) {
         solutions.resize(populationSize);
+        initializePopulation();
     }
 
-    Solution getBestSolution() {}
+    Solution getBestSolution() {
+        return solutions[0];
+    }
 
 private:
-    void initializePopulation() override {}
+    void initializePopulation() override {
+        for (int i = 0; i < solutions.size(); ++i) {
+            solutions[i] = generateSolution();
+        }
+    }
 
     void calculateFitness() override {}
 
@@ -27,6 +35,24 @@ private:
     void crossover() override {}
 
     void mutation() override {}
+
+    void sort() {}
+
+    Solution generateSolution() {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> distr(0, 1);
+
+        Solution solution;
+        solution.itemSelection.resize(values.size());
+
+        for (size_t i = 0; i < values.size(); ++i) {
+            solution.itemSelection[i] = distr(gen);
+        }
+
+        solution.fitness = fitness(solution);
+        return solution;
+    }
 
     double fitness(Solution& solution) {
         int totalValue = 0;
@@ -60,6 +86,13 @@ int main() {
     KnapsackGA knapsackGA(100, 200, values, weights, knapsackCapacity);
 
     std::cout <<"Hello Universe, I give a solution for the knapsack problem!";
+
+    std::cout <<"\n\nBest solution: ";
+    Solution bestSolution = knapsackGA.getBestSolution();
+    for (size_t i = 0; i < bestSolution.itemSelection.size(); ++i) {
+        std::cout << bestSolution.itemSelection[i] << " ";
+    }
+    std::cout <<"\nFitness: " << bestSolution.fitness <<"\n";
     
     return 0;
 }
